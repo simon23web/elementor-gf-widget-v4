@@ -76,8 +76,6 @@ final class Plugin {
 			return;
 		}
 
-		require_once TWENTYTHREEWEB_EGFW_PATH . 'includes/class-widget.php';
-
 		add_action( 'elementor/elements/categories_registered', [ $this, 'register_widget_category' ] );
 		add_action( 'elementor/widgets/register', [ $this, 'register_widgets' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_assets' ] );
@@ -113,6 +111,13 @@ final class Plugin {
 	 * Register Elementor widgets.
 	 */
 	public function register_widgets( Widgets_Manager $widgets_manager ): void {
+		if ( ! class_exists( '\Elementor\Widget_Base' ) || ! class_exists( '\Elementor\Controls_Manager' ) ) {
+			add_action( 'admin_notices', [ $this, 'admin_notice_missing_elementor_widget_api' ] );
+			return;
+		}
+
+		require_once TWENTYTHREEWEB_EGFW_PATH . 'includes/class-widget.php';
+
 		$widgets_manager->register( new Widget() );
 	}
 
@@ -166,6 +171,19 @@ final class Plugin {
 				esc_html__( '"%1$s" requires PHP version %2$s or greater.', 'elementor-gf-widget-v4' ),
 				esc_html__( '23Web Elementor Gravity Forms Widget V4', 'elementor-gf-widget-v4' ),
 				esc_html( self::MINIMUM_PHP_VERSION )
+			)
+		);
+	}
+
+	/**
+	 * Admin notice for incomplete Elementor widget API availability.
+	 */
+	public function admin_notice_missing_elementor_widget_api(): void {
+		$this->render_admin_notice(
+			sprintf(
+				/* translators: %s: plugin name */
+				esc_html__( '"%s" could not access Elementor widget classes during registration. Make sure Elementor is fully up to date and active.', 'elementor-gf-widget-v4' ),
+				esc_html__( '23Web Elementor Gravity Forms Widget V4', 'elementor-gf-widget-v4' )
 			)
 		);
 	}
