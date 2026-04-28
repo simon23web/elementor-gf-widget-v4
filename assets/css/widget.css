@@ -1,0 +1,17 @@
+.twentythreeweb-egfw {
+	width: 100%;
+}
+
+.twentythreeweb-egfw .gform_wrapper {
+	margin-bottom: 0;
+}
+
+.twentythreeweb-egfw__notice {
+	padding: 1rem 1.125rem;
+	border: 1px dashed #94a3b8;
+	border-radius: 0.75rem;
+	background: #f8fafc;
+	color: #0f172a;
+	font-size: 0.95rem;
+	line-height: 1.5;
+}
